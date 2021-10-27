@@ -75,10 +75,17 @@ object tt2 extends App{
      }while((frontier1.size>0)&&(frontier2.size>0))
       -1
     }
+    def findGraphDistance2(str1:String,str2:String):Int = findGraphDistance2(findNode(str1),findNode(str2))
+    def findNode(str:String):Node = nodes.find(_.description==str) match {
+        case n:Node => n
+        case _=> null
+    }
   }
-  val result = {
-
+  object Graph extends App{
+    val result = new Graph("Graph")
+    result.addNode("a","b","c","d")
+    result.addNode("b","d","e","f")
+    result.addNode("c","e","g")
+    println(result.findGraphDistance2("a","g"))
   }
-  println(result)
-
 }

@@ -285,7 +285,7 @@ object Application extends App{
   def uniqueEven: List[Int]=>List[Int] = new HashSet[Int].concat(_).toList.filter(_%2==1)
   def sortTwice: List[Int]=>(List[Int],List[Int]) = a=>(a.sortWith(_>_),a.sortWith(_<_))
   def fourPointOne:List[Int]=>(List[Int],List[Int]) = twoFuncCompose(uniqueEven(_))(sortTwice)
-  val list = List(1,1,1,2,3,3,3,5,6,7,8,9,0,0)
+  val list = List(1,1,1,2,3,3,3,5,6,7,8,9,0,0)      //
   println(s"results 4.1:\nchanged from $list to\n${fourPointOne(list)}")
   def substitute:Char=>Char=>String=>String = C=>H=>str=> for(ch<-str) yield ch match{
     case C => H
