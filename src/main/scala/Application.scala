@@ -1,3 +1,6 @@
+import scala.collection.immutable.HashSet
+import scala.math.Ordered.orderingToOrdered
+
 object Application extends App{
   // ********************************************************************************************************************************************************************************************
   //                                                               Основы работы с функциями в Scala
@@ -198,4 +201,98 @@ object Application extends App{
 
   println(result)
 
+  def twoFuncCompose[A,B,C](f1: A => B)(f2: B => C):A => C = a => f2(f1(a))
+
+  def threeFuncCompose0[A,B,C,D](f1: A => B)(f2: B => C)(f3: C=>D):A => D = a => f3(f2(f1(a)))
+
+
+  val v1 = List(1,2,3)
+
+  val v2 = List(1,2,3)
+
+
+
+  def join: List[Int] => List[Int] => List[(Int,Int)] = l1 => l2 => l1.zip(l2) // список => список => список пар
+
+  println(join(v1)(v2))
+
+
+
+  def multiply(l: List[(Int, Int)]): List[Int] = {
+
+
+    def run(l: List[(Int, Int)], acc: List[Int]): List[Int] = {
+      l match {
+        case Nil => acc
+        case h :: t => run(t,h._1*h._2 :: acc)
+
+      }
+
+    }
+
+    run(l,Nil)
+
+  }
+
+
+
+  def sum (l:List[Int]): Int = l.sum
+
+
+
+  def scalarProduct: List[Int] => List[Int] => Int = a => twoFuncCompose(twoFuncCompose(join(a))(multiply))(sum)
+  def scalarProduct1: List[Int] => List[Int] => Int = a => threeFuncCompose0(join(a))(multiply)(sum)
+  println(scalarProduct1(v1)(v2))
+
+  def NOD: Int=>Int=>Int = a => b => {
+    val x = a max b
+    val y = a min b
+    x%y match {
+      case 0 => y
+      case _ => NOD(x%y)(y)
+    }
+  }
+  def NOK:Int=>Int=>Int = a=>b=> a/NOD(a)(b) * b
+  def printNODNOK(a:Int,b:Int) = {
+    println(s"НОД($a,$b) = ${NOD(a)(b)}")
+    println(s"НОК($a,$b) = ${NOK(a)(b)}")
+  }
+  printNODNOK(30,18)
+
+  def LetMeIIIIN: Iterable[Iterable[Int]=>Iterable[Int]]=>Int=>Iterable[Iterable[Int]] = A=>n=>
+    for(func<-A) yield func(1 to n)
+    //A=>n=> for(func<-A) yield (for(i<-1 to n) yield func(i)).sortWith(_ > _)
+
+  def neutural: Iterable[Int]=>Iterable[Int] = _.map(i=>i)
+  def odd: Iterable[Int]=>Iterable[Int] = for(i<-_ if i%2==1) yield i   //Лучше использовать фильтр в данном случае.
+  def even: Iterable[Int]=>Iterable[Int] = for(i<-_ if i%2==0) yield i  //Ну, честно, это неэлегантно
+  def factor: Iterable[Int]=>Iterable[Int] = _.map(i=> (1 to i).product)
+  def sqr: Iterable[Int]=>Iterable[Int] = _.map(i=>i*i)
+  def pwr2: Iterable[Int]=>Iterable[Int] = _.map(i=> math.pow(2,i).toInt)
+  println(s"answers:\n${LetMeIIIIN(Array(neutural,odd,even,factor,sqr,pwr2))(10).mkString("\n")}")
+  /**
+   * Это комент, чтобы объяснить строчку ниже
+   * groupBy - группирует общекты коллекции по свойству, в данном случае свойством будет само значение, но вообще можно
+   * впихнуть любую функцию. В резульатате мы получаем отображение
+   * Int=>Iterable[Int]
+   * .map - создаём новую коллекцию из элементов коллекции парочек получившейся на предыдущем шаге.
+   * (Пары (Int,Iterable[Int]))
+   * _._1 - из парочки вытаскиваем 1 элемент, то есть наше уникальное число.
+   * В общем-то это тоже самое, что и оставленно в итоге, просто случай более общий
+   */
+  //def uniqueEven: Iterable[Int]=>Iterable[Int] = _.groupBy(a=>a).map(_._1).filter(_%2==1)
+
+  def uniqueEven: List[Int]=>List[Int] = new HashSet[Int].concat(_).toList.filter(_%2==1)
+  def sortTwice: List[Int]=>(List[Int],List[Int]) = a=>(a.sortWith(_>_),a.sortWith(_<_))
+  def fourPointOne:List[Int]=>(List[Int],List[Int]) = twoFuncCompose(uniqueEven(_))(sortTwice)
+  val list = List(1,1,1,2,3,3,3,5,6,7,8,9,0,0)
+  println(s"results 4.1:\nchanged from $list to\n${fourPointOne(list)}")
+  def substitute:Char=>Char=>String=>String = C=>H=>str=> for(ch<-str) yield ch match{
+    case C => H
+    case c:Char => c
+  }
+  val str = "Wello hold"
+  val ch0 = 'l'
+  val ch1 = 'b'
+  println(s"results 4.2:\n In string \"$str\" $ch0 replaced with $ch1:\n ${substitute(ch0)(ch1)(str)}")
 }

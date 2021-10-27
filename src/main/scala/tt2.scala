@@ -1,6 +1,6 @@
-package Ex
 
 import scala.collection.mutable.ArrayBuffer
+import scala.language.postfixOps
 
 object tt2 extends App{
   class Graph(description: String){
@@ -15,11 +15,11 @@ object tt2 extends App{
     def addNode(name:String,names:String*):Unit={
       def getNode(name:String): Node = {
         for(n<-nodes) if (n.description==name) return n
-        return new Node(name)
+        new Node(name)
       }
       val node = getNode(name)
       nodes+=node
-      node.neighbours ++= for(n<-names) yield getNode(n)
+      node.neighbours.addAll(for(n<-names) yield getNode(n))
     }
     //однонаправленный поиск
     def findGraphDistance(node1:Node,node2:Node):Int = {
@@ -38,16 +38,16 @@ object tt2 extends App{
         //генерация нового фронтира
         frontier = for(parent<-surface; node<-parent.neighbours if isNew(node)) yield node
       } while(frontier.size != 0)
-      new Nothing
+      -1
     }
     //двунаправленный поиск
     //как функция выше, но в среднем эффективнее
     def findGraphDistance2(node1:Node,node2:Node):Int ={
-      var surface1 = ArrayBuffer(node1)  //поверхности
+      var surface1 = ArrayBuffer(node1)   //поверхности
       var surface2 = ArrayBuffer(node2)
-      var frontier1 = node1.neighbours   //слои точек над поверхностью
+      var frontier1 = node1.neighbours    //слои точек над поверхностью
       var frontier2 = node2.neighbours
-      var counter = 0                   //счётчик
+      var counter = 0                     //счётчик
       def areSurfacesTouching:Boolean = {
         for(n<-surface1 if surface2.contains(n)) return true
         false
@@ -73,8 +73,12 @@ object tt2 extends App{
           frontier2 = for(parent<-surface2; node<-parent.neighbours if isNew2(node))yield node
         }
      }while((frontier1.size>0)&&(frontier2.size>0))
-      new Nothing
+      -1
     }
   }
+  val result = {
+
+  }
+  println(result)
 
 }
