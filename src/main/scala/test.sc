@@ -1,6 +1,6 @@
-def odd: Int=>Option[Int] = a=> if(a%2==0) Some(a) else None
-odd(1)
-val v:Int  = Some(2).value
-odd(3)
+import Graphs.Graph
 
-val i = 10
+val testGraph = new Graph[Int,String]
+testGraph.add(1,2,3,4,5)
+testGraph.add(2,3,4,5)
+testGraph.add(7,2,3,4,5)
