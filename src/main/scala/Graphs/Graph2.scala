@@ -65,7 +65,6 @@ class Graph2[V] {
     var doneNodes = new HashSet[Node[V]]
     def getSeparatedPart(node:Node[V]):Graph2[V] = {
       doneNodes = doneNodes + node
-
     }
   }
 }

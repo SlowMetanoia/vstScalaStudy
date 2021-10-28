@@ -24,7 +24,6 @@ class Graph3[V](val nodes:Map[Node[V],Set[Node[V]]]){
    * @return
    */
   def add(ns:Iterable[Node[V]]):Graph3[V] = {
-
   }
   /**
    * Добавляет ребро.
