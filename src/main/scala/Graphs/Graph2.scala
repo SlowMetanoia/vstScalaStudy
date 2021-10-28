@@ -16,13 +16,7 @@ object Node {
  * Прототип.
  */
 class Graph2[V] {
-  def this(nodes:HashMap[Node[V],HashSet[Node[V]]]) = {
-    this()
-    this.nodes = nodes
-  }
-  def this(graph: Graph2[V]) = {
-    this(graph.nodes)
-  }
+
   var nodes = new HashMap[Node[V],HashSet[Node[V]]]()
 
   /**
