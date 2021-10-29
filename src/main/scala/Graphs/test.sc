@@ -1,5 +1,5 @@
 import scala.collection.immutable.{HashMap, HashSet}
 
-var set = HashSet(1,2,3,4,5,6,7)
-def set_ = set
-for
+var a = HashMap(1->2,2->3,3->4,5->4)
+a.contains(4)
+a.contains(5)

@@ -280,7 +280,7 @@ object Application extends App{
    * _._1 - из парочки вытаскиваем 1 элемент, то есть наше уникальное число.
    * В общем-то это тоже самое, что и оставленно в итоге, просто случай более общий
    */
-  def uniqueEven: Iterable[Int]=>Iterable[Int] = _.groupBy(a=>a).map(_._1).filter(_%2==1)
+  //def uniqueEven: Iterable[Int]=>Iterable[Int] = _.groupBy(a=>a).map(_._1).filter(_%2==1)
 
   def uniqueEven: List[Int]=>List[Int] = new HashSet[Int].concat(_).toList.filter(_%2==1)
   def sortTwice: List[Int]=>(List[Int],List[Int]) = a=>(a.sortWith(_>_),a.sortWith(_<_))
