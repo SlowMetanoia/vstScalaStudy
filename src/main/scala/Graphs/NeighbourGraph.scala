@@ -10,6 +10,13 @@ class Node[V]private(val value:V) extends AnyVal{
 object Node{
   def apply[V](value:V):Node[V] = new Node(value)
 }
+
+/**
+ * Честно говоря, теперь я понимаю, что в такой реализации гораздо логичнее ссылки на соседей поместить прямиком в ноды,
+ * но переписывать сейчас не хочу.
+ * @param nodes
+ * @tparam V
+ */
 class NeighbourGraph[V](val nodes:Map[Node[V],immutable.Set[Node[V]]]) {
   def this() = this(new HashMap[Node[V], Set[Node[V]]])
 
@@ -87,7 +94,12 @@ class NeighbourGraph[V](val nodes:Map[Node[V],immutable.Set[Node[V]]]) {
    * @param n
    * @return
    */
-  def exclude(n:Node[V]):NeighbourGraph[V] = new NeighbourGraph[V]((nodes - n))
+  def exclude(n:Node[V]):NeighbourGraph[V] = new NeighbourGraph[V]((nodes - n).map(node=>
+    if(node._2.contains(n))
+      node._1->(node._2 - n)
+    else
+      node
+  ))
 
   /**
    * То-же, что и exclude
@@ -135,6 +147,31 @@ class NeighbourGraph[V](val nodes:Map[Node[V],immutable.Set[Node[V]]]) {
    */
   private[this] def getConnectedToNode:Node[V]=>Set[Node[V]] = n=> getConnectedPart(Set(n))
 
+  /**
+   * Реализация двунаправленного поиска
+   * @param node1
+   * @param node2
+   * @return графовое растояние между node1 и node2
+   */
+  def ErdosNumber(node1:Node[V],node2:Node[V]): Int = {
+    //обход в ширину
+    def expand(nodeSet:Set[Node[V]],surface:Set[Node[V]]):(Set[Node[V]],Set[Node[V]]) = {
+      val newNodes = for (node<-surface;n<-nodes(node) if !nodeSet.contains(n)) yield n
+      (nodeSet++newNodes,newNodes)
+    }
+    var counter = 0
+    var x = (Set(node1),Set(node1))
+    var y = (Set(node2),Set(node2))
+    while (!((x._2.isEmpty) || (y._2.isEmpty))) {
+      if ((x._2 & y._2).nonEmpty) return counter
+      counter+=1
+      x = expand(x._1,x._2)
+      if ((x._2 & y._2).nonEmpty) return counter
+      y = expand(y._1,y._2)
+      counter+=1
+    }
+    -1
+  }
   override def toString = s"\n${this.getClass}:\n" + (for((n,ns)<-nodes) yield s"$n->${ns.mkString("(",",",")")}").mkString("\n")
 }
 
