@@ -261,7 +261,18 @@ object Application extends App{
 
   def LetMeIIIIN: Iterable[Iterable[Int]=>Iterable[Int]]=>Int=>Iterable[Iterable[Int]] = A=>n=>
     for(func<-A) yield func(1 to n)
-    //A=>n=> for(func<-A) yield (for(i<-1 to n) yield func(i)).sortWith(_ > _)
+
+  def filterThanMap[A,B](filter:A=>Boolean)(map:A=>B):(Iterable[A]=>Iterable[B]) = _.view.filter(filter).map(map).toIterable
+
+  def neutural1 = filterThanMap[Int,Int](a=>true)(a=>a)
+  def odd1 = filterThanMap[Int,Int](_%2==1)(a=>a)
+  def even1 = filterThanMap[Int,Int](_%2==0)(a=>a)
+  def factor1 = filterThanMap[Int,Int](a=>true)(i=>(1 to i).product)
+  def sqr1 = filterThanMap[Int,Int](a=>true)(i=>i*i)
+
+  def justMap = filterThanMap[Int,Int](a=>true)(_)
+
+  def pwr21 = justMap(a=>math.pow(2,a).toInt)
 
   def neutural: Iterable[Int]=>Iterable[Int] = _.map(i=>i)
   def odd: Iterable[Int]=>Iterable[Int] = for(i<-_ if i%2==1) yield i   //Лучше использовать фильтр в данном случае.
@@ -295,4 +306,12 @@ object Application extends App{
   val ch0 = 'l'
   val ch1 = 'b'
   println(s"results 4.2:\n In string \"$str\" $ch0 replaced with $ch1:\n ${substitute(ch0)(ch1)(str)}")
+  //принимает функцию преобразования символа и строку. Преобразует каждый символ строки
+  def charTransformer:(Char=>Char)=>String=>String = fch=>str=> for(ch<-str) yield fch(ch)
+  val charTransformerGen:Char=>Char=>(Char=>Char) = ch0=>ch1=> {
+    val chf:Char=>Char = ch=> if (ch == ch0) ch1 else ch
+    chf
+  }
+  println("abcdd".map(charTransformerGen('d')('e')))
+  println(charTransformer(charTransformerGen('d')('e'))("Dat date is dat bad"))
 }
