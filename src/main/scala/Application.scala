@@ -1,7 +1,9 @@
+
+import scala.annotation.Annotation
 import scala.collection.immutable.HashSet
 import scala.math.Ordered.orderingToOrdered
 
-object Application extends App{
+object Application extends App {
   // ********************************************************************************************************************************************************************************************
   //                                                               Основы работы с функциями в Scala
   // ********************************************************************************************************************************************************************************************
@@ -21,26 +23,30 @@ object Application extends App{
 
   //--------------------------------------------------------------------------------------------
   // Объявление функций в Scala
-  def m_sum(x: Int, y: Int): Int = x + y                                                            // Функция сложения двух чисел
+  def m_sum(x: Int, y: Int): Int = x + y // Функция сложения двух чисел
 
-  def calcAnything(number: Int, calcFunction: Int => Int): Int = calcFunction(number)               // Функция, возвращающая результат "какого-то вычислиения" Int => Int (функция, содержащая реализацию вычислиения, передается в качестве аргумента)
-  def calcSquare(num: Int): Int = num * num                                                         // Функция, возвращающая квадрат целого значения
-  def calcCube(num: Int): Int = num * num * num                                                     // Функция, возвращающая куб целого значения
+  def calcAnything(number: Int, calcFunction: Int => Int): Int = calcFunction(number) // Функция, возвращающая результат "какого-то вычислиения" Int => Int (функция, содержащая реализацию вычислиения, передается в качестве аргумента)
 
-  def performAddition(x: Int, y: Int): Int = x + y                                                  // Еще одна Функция сложения двух чисел
-  def performSubtraction(x: Int, y: Int): Int = x - y                                               // Функция вычитания двух чисел
-  def performMultiplication(x: Int, y: Int): Int = x * y                                            // Функция умножения двух чисел
+  def calcSquare(num: Int): Int = num * num // Функция, возвращающая квадрат целого значения
+
+  def calcCube(num: Int): Int = num * num * num // Функция, возвращающая куб целого значения
+
+  def performAddition(x: Int, y: Int): Int = x + y // Еще одна Функция сложения двух чисел
+
+  def performSubtraction(x: Int, y: Int): Int = x - y // Функция вычитания двух чисел
+
+  def performMultiplication(x: Int, y: Int): Int = x * y // Функция умножения двух чисел
 
   // Объявление функций в Scala и передача ее как константы
-  val f_sum: (Int, Int) => Int = (x, y) => x + y                                                    // Функция сложения двух чисел как значение
+  val f_sum: (Int, Int) => Int = (x, y) => x + y // Функция сложения двух чисел как значение
 
   //--------------------------------------------------------------------------------------------
   // передача функции calcSquare как значения
   val squareCalculated = calcAnything(2, calcSquare)
-  assert(squareCalculated == 4)         // программа выкидывает Assertion error, если функция вернула результат, отличный от указанного (используется для прогонки тестов)
+  assert(squareCalculated == 4) // программа выкидывает Assertion error, если функция вернула результат, отличный от указанного (используется для прогонки тестов)
 
   val cubeCalculated = calcAnything(3, calcCube)
-  assert(cubeCalculated == 27)          // программа выкидывает Assertion error, если функция вернула результат, отличный от указанного (используется для прогонки тестов)
+  assert(cubeCalculated == 27) // программа выкидывает Assertion error, если функция вернула результат, отличный от указанного (используется для прогонки тестов)
 
   //--------------------------------------------------------------------------------------------
   // функция, возвращающая другую функцию как значение
@@ -66,9 +72,11 @@ object Application extends App{
   // Каррированная функция сложения двух чисел
   val f_curriedSum: Int => Int => Int = x => y => x + y // явное объявление
   val f_curriedSum2: Int => Int => Int = f_sum.curried // объявление с использованием метода каррирования функции нескольких аргументов
+
   //--------------------------------------------------------------
   // Пример каррированного метода
   def m_curriedSum(x: Int)(y: Int): Int = x + y // явное объявление
+
   val m_curriedSum2: Int => Int => Int = (m_sum _).curried // объявление с использованием метода каррирования другого метода с несколькими аргументами
   //--------------------------------------------------------------
   // Partial application
@@ -77,7 +85,7 @@ object Application extends App{
   val pa_m_increment: Int => Int = m_curriedSum(1) // объявление частного случая общего метода
   //--------------------------------------------------------------
   // Секция вывода результатов выполнения объявленных функций
-  println(f_sum(1,2))
+  println(f_sum(1, 2))
   println(f_curriedSum(1)(2))
   println(f_curriedSum2(1)(2))
   println(m_curriedSum(1)(2))
@@ -96,8 +104,8 @@ object Application extends App{
   //----------------------------------------------------------
   //  generator - Range (диапазон значений, который используется для определения количества шагов цикла)
   //                    (задает режим цикла со счетчиком)
-  val range = 1 to 3           // счетчик пробегает значения от 1 до 3 включительно
-  val rangeUntil = 1 until 3   // счетчик пробегает значения от 1 до 3 не включительно
+  val range = 1 to 3 // счетчик пробегает значения от 1 до 3 включительно
+  val rangeUntil = 1 until 3 // счетчик пробегает значения от 1 до 3 не включительно
 
   // Секция выполнения цикла
   for (num <- range) {
@@ -114,7 +122,7 @@ object Application extends App{
     i <- range
     j <- rangeUntil
   } {
-    println (s"$i, $j")
+    println(s"$i, $j")
   }
   //----------------------------------------------------------
   //  generator - Collection (различные реализации коллекций)
@@ -129,17 +137,17 @@ object Application extends App{
   for {
     subj1 <- subjectList
     subj2 <- subjectList
-    if subj2 != subj1                    // фильтруем, чтобы не было нескольких одинаковых дисциплин
+    if subj2 != subj1 // фильтруем, чтобы не было нескольких одинаковых дисциплин
     subj3 <- subjectList
-    if subj3 != subj2 && subj3 != subj1  // фильтруем, чтобы не было нескольких одинаковых дисциплин
+    if subj3 != subj2 && subj3 != subj1 // фильтруем, чтобы не было нескольких одинаковых дисциплин
   } {
-    println(s"$subj1, $subj2, $subj3 ")          // не чистая итерация (побочный эффект - печать)
+    println(s"$subj1, $subj2, $subj3 ") // не чистая итерация (побочный эффект - печать)
   }
   //----------------------------------------------------------
   //  generator - Map (различные реализации <Ключ, Значение>)
 
   val degreeMap = Map("кн" -> "кандидат наук", "дн" -> "доктор наук", "бс" -> "без степени")
-  for ((key,value) <- degreeMap) {
+  for ((key, value) <- degreeMap) {
     println(s"$key - это аббревиатура степени $value")
   }
 
@@ -147,27 +155,27 @@ object Application extends App{
   // Во внешней итерации получаем пару "ключ-значение", причем для внутренней итерации
   // значение является списком.
   val deck = Map("♣" -> List("Туз", "Король", "Дама"),
-                 "♦" -> List("Валет", "10"),
-                 "♥" -> List("9", "8", "7"),
-                 "♠" -> List("Туз", "Король", "Валет", "6"))
+    "♦" -> List("Валет", "10"),
+    "♥" -> List("9", "8", "7"),
+    "♠" -> List("Туз", "Король", "Валет", "6"))
   for {
-      (suit, cardList) <- deck
-      card <- cardList
-    } {
-      println(s"$card имеет масть $suit")         // не чистая итерация (побочный эффект - печать)
-    }
+    (suit, cardList) <- deck
+    card <- cardList
+  } {
+    println(s"$card имеет масть $suit") // не чистая итерация (побочный эффект - печать)
+  }
 
   // Определение правила изменения значинией элементов коллекции
   //               val result = for ( generator ) yield {  yield_statement  }
   // yield - вернет результат выполнения оператора в качестве нового элемента результирующей коллекции
 
   // Меняем содержимое коллекции
-  val numberList = List(1, 2, 3)   // Список целых чисел
+  val numberList = List(1, 2, 3) // Список целых чисел
   val equationList = for (number <- numberList) yield {
-    s"""$number + $number = ${number + number}"""             // чистая итерация
+    s"""$number + $number = ${number + number}""" // чистая итерация
   }
   // Выводим содержимое измененной коллекции
-  for (el <- equationList){
+  for (el <- equationList) {
     println(el)
   }
 
@@ -182,8 +190,8 @@ object Application extends App{
 
   // Вариант 1 (без синтаксического сахара, напрямую вызываем flatMap и map)
   val _result = someIntValue.flatMap(
-             intValue => someStringValue.map(
-                                stringValue => s"$intValue это $stringValue")
+    intValue => someStringValue.map(
+      stringValue => s"$intValue это $stringValue")
   )
 
   println(_result)
@@ -192,30 +200,28 @@ object Application extends App{
   // Можно использовать режим работы for (for-comprehension) с несколькими генераторами,
   // поскольку Option в Scala - это монада и поддерживает map и flatMap
 
-  val result = for {                    // result: Option[String] = Some(10 is Ten)
+  val result = for { // result: Option[String] = Some(10 is Ten)
     intValue <- someIntValue
     stringValue <- someStringValue
-  } yield {
-    s"$intValue это $stringValue"       // чистая итерация
+                     } yield {
+    s"$intValue это $stringValue" // чистая итерация
   }
 
   println(result)
 
-  def twoFuncCompose[A,B,C](f1: A => B)(f2: B => C):A => C = a => f2(f1(a))
+  def twoFuncCompose[A, B, C](f1: A => B)(f2: B => C): A => C = a => f2(f1(a))
 
-  def threeFuncCompose0[A,B,C,D](f1: A => B)(f2: B => C)(f3: C=>D):A => D = a => f3(f2(f1(a)))
-
-
-  val v1 = List(1,2,3)
-
-  val v2 = List(1,2,3)
+  def threeFuncCompose0[A, B, C, D](f1: A => B)(f2: B => C)(f3: C => D): A => D = a => f3(f2(f1(a)))
 
 
+  val v1 = List(1, 2, 3)
 
-  def join: List[Int] => List[Int] => List[(Int,Int)] = l1 => l2 => l1.zip(l2) // список => список => список пар
+  val v2 = List(1, 2, 3)
+
+
+  def join: List[Int] => List[Int] => List[(Int, Int)] = l1 => l2 => l1.zip(l2) // список => список => список пар
 
   println(join(v1)(v2))
-
 
 
   def multiply(l: List[(Int, Int)]): List[Int] = {
@@ -224,63 +230,77 @@ object Application extends App{
     def run(l: List[(Int, Int)], acc: List[Int]): List[Int] = {
       l match {
         case Nil => acc
-        case h :: t => run(t,h._1*h._2 :: acc)
+        case h :: t => run(t, h._1 * h._2 :: acc)
 
       }
 
     }
 
-    run(l,Nil)
+    run(l, Nil)
 
   }
 
 
-
-  def sum (l:List[Int]): Int = l.sum
-
+  def sum(l: List[Int]): Int = l.sum
 
 
   def scalarProduct: List[Int] => List[Int] => Int = a => twoFuncCompose(twoFuncCompose(join(a))(multiply))(sum)
+
   def scalarProduct1: List[Int] => List[Int] => Int = a => threeFuncCompose0(join(a))(multiply)(sum)
+
   println(scalarProduct1(v1)(v2))
 
-  def NOD: Int=>Int=>Int = a => b => {
+  def NOD: Int => Int => Int = a => b => {
     val x = a max b
     val y = a min b
-    x%y match {
+    x % y match {
       case 0 => y
-      case _ => NOD(x%y)(y)
+      case _ => NOD(x % y)(y)
     }
   }
-  def NOK:Int=>Int=>Int = a=>b=> a/NOD(a)(b) * b
-  def printNODNOK(a:Int,b:Int) = {
+
+  def NOK: Int => Int => Int = a => b => a / NOD(a)(b) * b
+
+  def printNODNOK(a: Int, b: Int) = {
     println(s"НОД($a,$b) = ${NOD(a)(b)}")
     println(s"НОК($a,$b) = ${NOK(a)(b)}")
   }
-  printNODNOK(30,18)
 
-  def LetMeIIIIN: Iterable[Iterable[Int]=>Iterable[Int]]=>Int=>Iterable[Iterable[Int]] = A=>n=>
-    for(func<-A) yield func(1 to n)
+  printNODNOK(30, 18)
 
-  def filterThanMap[A,B](filter:A=>Boolean)(map:A=>B):(Iterable[A]=>Iterable[B]) = _.view.filter(filter).map(map).toIterable
+  def LetMeIIIIN: Iterable[Iterable[Int] => Iterable[Int]] => Int => Iterable[Iterable[Int]] = A => n =>
+    for (func <- A) yield func(1 to n)
 
-  def neutural1 = filterThanMap[Int,Int](a=>true)(a=>a)
-  def odd1 = filterThanMap[Int,Int](_%2==1)(a=>a)
-  def even1 = filterThanMap[Int,Int](_%2==0)(a=>a)
-  def factor1 = filterThanMap[Int,Int](a=>true)(i=>(1 to i).product)
-  def sqr1 = filterThanMap[Int,Int](a=>true)(i=>i*i)
+  def filterThanMap[A, B](filter: A => Boolean)(map: A => B): (Iterable[A] => Iterable[B]) = _.view.filter(filter).map(map).toIterable
 
-  def justMap = filterThanMap[Int,Int](a=>true)(_)
+  def neutural1 = filterThanMap[Int, Int](a => true)(a => a)
 
-  def pwr21 = justMap(a=>math.pow(2,a).toInt)
+  def odd1 = filterThanMap[Int, Int](_ % 2 == 1)(a => a)
 
-  def neutural: Iterable[Int]=>Iterable[Int] = _.map(i=>i)
-  def odd: Iterable[Int]=>Iterable[Int] = for(i<-_ if i%2==1) yield i   //Лучше использовать фильтр в данном случае.
-  def even: Iterable[Int]=>Iterable[Int] = for(i<-_ if i%2==0) yield i  //Ну, честно, это неэлегантно
-  def factor: Iterable[Int]=>Iterable[Int] = _.map(i=> (1 to i).product)
-  def sqr: Iterable[Int]=>Iterable[Int] = _.map(i=>i*i)
-  def pwr2: Iterable[Int]=>Iterable[Int] = _.map(i=> math.pow(2,i).toInt)
-  println(s"answers:\n${LetMeIIIIN(Array(neutural,odd,even,factor,sqr,pwr2))(10).mkString("\n")}")
+  def even1 = filterThanMap[Int, Int](_ % 2 == 0)(a => a)
+
+  def factor1 = filterThanMap[Int, Int](a => true)(i => (1 to i).product)
+
+  def sqr1 = filterThanMap[Int, Int](a => true)(i => i * i)
+
+  def justMap = filterThanMap[Int, Int](a => true)(_)
+
+  def pwr21 = justMap(a => math.pow(2, a).toInt)
+
+  def neutural: Iterable[Int] => Iterable[Int] = _.map(i => i)
+
+  def odd: Iterable[Int] => Iterable[Int] = for (i <- _ if i % 2 == 1) yield i //Лучше использовать фильтр в данном случае.
+
+  def even: Iterable[Int] => Iterable[Int] = for (i <- _ if i % 2 == 0) yield i //Ну, честно, это неэлегантно
+
+  def factor: Iterable[Int] => Iterable[Int] = _.map(i => (1 to i).product)
+
+  def sqr: Iterable[Int] => Iterable[Int] = _.map(i => i * i)
+
+  def pwr2: Iterable[Int] => Iterable[Int] = _.map(i => math.pow(2, i).toInt)
+
+  println(s"answers:\n${LetMeIIIIN(Array(neutural, odd, even, factor, sqr, pwr2))(10).mkString("\n")}")
+
   /**
    * Это комент, чтобы объяснить строчку ниже
    * groupBy - группирует общекты коллекции по свойству, в данном случае свойством будет само значение, но вообще можно
@@ -293,25 +313,38 @@ object Application extends App{
    */
   //def uniqueEven: Iterable[Int]=>Iterable[Int] = _.groupBy(a=>a).map(_._1).filter(_%2==1)
 
-  def uniqueEven: List[Int]=>List[Int] = new HashSet[Int].concat(_).toList.filter(_%2==1)
-  def sortTwice: List[Int]=>(List[Int],List[Int]) = a=>(a.sortWith(_>_),a.sortWith(_<_))
-  def fourPointOne:List[Int]=>(List[Int],List[Int]) = twoFuncCompose(uniqueEven(_))(sortTwice)
-  val list = List(1,1,1,2,3,3,3,5,6,7,8,9,0,0)      //
+  def uniqueEven: List[Int] => List[Int] = new HashSet[Int].concat(_).toList.filter(_ % 2 == 1)
+
+  def sortTwice: List[Int] => (List[Int], List[Int]) = a => (a.sortWith(_ > _), a.sortWith(_ < _))
+
+  def fourPointOne: List[Int] => (List[Int], List[Int]) = twoFuncCompose(uniqueEven(_))(sortTwice)
+
+  val list = List(1, 1, 1, 2, 3, 3, 3, 5, 6, 7, 8, 9, 0, 0) //
   println(s"results 4.1:\nchanged from $list to\n${fourPointOne(list)}")
-  def substitute:Char=>Char=>String=>String = C=>H=>str=> for(ch<-str) yield ch match{
+
+  def substitute: Char => Char => String => String = C => H => str => for (ch <- str) yield ch match {
     case C => H
-    case c:Char => c
+    case c: Char => c
   }
+
   val str = "Wello hold"
   val ch0 = 'l'
   val ch1 = 'b'
   println(s"results 4.2:\n In string \"$str\" $ch0 replaced with $ch1:\n ${substitute(ch0)(ch1)(str)}")
+
   //принимает функцию преобразования символа и строку. Преобразует каждый символ строки
-  def charTransformer:(Char=>Char)=>String=>String = fch=>str=> for(ch<-str) yield fch(ch)
-  val charTransformerGen:Char=>Char=>(Char=>Char) = ch0=>ch1=> {
-    val chf:Char=>Char = ch=> if (ch == ch0) ch1 else ch
-    chf
+  def charTransformer: (Char => Char) => String => String = fch => str => for (ch <- str) yield fch(ch)
+
+  val charTransformerGen: Char => Char => (Char => Char) = ch0 => ch1 => {
+    ch => if(ch == ch0) ch1 else ch
   }
   println("abcdd".map(charTransformerGen('d')('e')))
   println(charTransformer(charTransformerGen('d')('e'))("Dat date is dat bad"))
+
+  def LinearComposition[A, B](simpleFuncs: (Any => Any)*):A=>B = a=>{
+    def func2comp[D,E,F](f1:D=>E)(f2:E=>F):D=>F = d=> f2(f1(d))
+    _ match {
+      case h::t =>
+    }
+  }
 }
