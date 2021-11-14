@@ -43,3 +43,5 @@ bin/
 
 #general
 *.class
+/src/main/scala/comp/
+/src/main/scala/comp/

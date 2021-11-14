@@ -341,10 +341,17 @@ object Application extends App {
   println("abcdd".map(charTransformerGen('d')('e')))
   println(charTransformer(charTransformerGen('d')('e'))("Dat date is dat bad"))
 
-  def LinearComposition[A, B](simpleFuncs: (Any => Any)*):A=>B = a=>{
-    def func2comp[D,E,F](f1:D=>E)(f2:E=>F):D=>F = d=> f2(f1(d))
-    _ match {
-      case h::t =>
-    }
-  }
+  /**
+   * Собственно композиция.
+   */
+  import Composition.SimpleFunctionComposition._
+  val f1:Int=>Int = _+1
+  val f2:Int=>String = _.toString
+  val f3:String=>Array[Char] = _.toCharArray
+  val f4:Array[Char]=>String = _.mkString("")
+  val f5:Array[Char]=>Array[Char] = _.map(c=>(c+1).toChar)
+
+  val f6 =
+    f1:=>f2:=>f3:=>f5:=>f4:=>println
+  f6(9875)
 }

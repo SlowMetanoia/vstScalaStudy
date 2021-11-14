@@ -10,3 +10,4 @@ vals = vals.flatMap(a=> a%2 match {
   case 1 => Some(a)
 })
 vals
+('a'+1).toChar
