@@ -1,5 +1,0 @@
-package Simplex
-
-class Simplex {
-
-}

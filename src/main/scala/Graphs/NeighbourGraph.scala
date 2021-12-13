@@ -1,5 +1,6 @@
 package Graphs
 
+import scala.annotation.tailrec
 import scala.collection.immutable.{HashMap, HashSet}
 import scala.collection.immutable
 import scala.language.postfixOps
@@ -125,16 +126,17 @@ class NeighbourGraph[V](val nodes:Map[Node[V],immutable.Set[Node[V]]]) {
   }
 
   def findBottlenecks:Set[Node[V]] = {
-    val result = for {
+    for {
       node <- nodes.keySet
       if connectedGraphParts.size < exclude(node).connectedGraphParts.size
     } yield node
-    result
-    }
+  }
+
   /**
    * @param nodeSet набор связных нод
    * @return полный набор нод, образующих связный подграф
    */
+  @tailrec
   private[this] def getConnectedPart(nodeSet:Set[Node[V]]):Set[Node[V]] ={
     val newNodes = for(node<-nodeSet;neighbour<-nodes(node) if !nodeSet.contains(neighbour)) yield neighbour
     if(newNodes.isEmpty)
@@ -174,4 +176,3 @@ class NeighbourGraph[V](val nodes:Map[Node[V],immutable.Set[Node[V]]]) {
   }
   override def toString = s"\n${this.getClass}:\n" + (for((n,ns)<-nodes) yield s"$n->${ns.mkString("(",",",")")}").mkString("\n")
 }
-

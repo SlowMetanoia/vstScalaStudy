@@ -11,3 +11,12 @@ vals = vals.flatMap(a=> a%2 match {
 })
 vals
 ('a'+1).toChar
+
+class A(value:Int){
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case b:A => b.value == this.value
+      case _ => false
+    }
+  }
+}

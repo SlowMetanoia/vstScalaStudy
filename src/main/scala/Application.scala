@@ -1,7 +1,4 @@
 
-import scala.annotation.Annotation
-import scala.collection.immutable.HashSet
-import scala.math.Ordered.orderingToOrdered
 
 object Application extends App {
   // ********************************************************************************************************************************************************************************************
@@ -268,10 +265,14 @@ object Application extends App {
 
   printNODNOK(30, 18)
 
-  def LetMeIIIIN: Iterable[Iterable[Int] => Iterable[Int]] => Int => Iterable[Iterable[Int]] = A => n =>
+  def LetMeIIIIN: Iterable[Iterable[Int] => Iterable[Int]] => Int =>
+      Iterable[Iterable[Int]] = A => n =>
     for (func <- A) yield func(1 to n)
 
-  def filterThanMap[A, B](filter: A => Boolean)(map: A => B): (Iterable[A] => Iterable[B]) = _.view.filter(filter).map(map).toIterable
+  def LetMeIN(A:Iterable[Iterable[Int] => Iterable[Int]])(n:Int): Iterable[Iterable[Int]] =
+    for (func <- A) yield func(1 to n)
+
+  def filterThanMap[A, B](Filter: A => Boolean)(Map: A => B): (Iterable[A] => Iterable[B]) = a=>a.view.filter(Filter).map(Map)
 
   def neutural1 = filterThanMap[Int, Int](a => true)(a => a)
 
@@ -287,9 +288,9 @@ object Application extends App {
 
   def pwr21 = justMap(a => math.pow(2, a).toInt)
 
-  def neutural: Iterable[Int] => Iterable[Int] = _.map(i => i)
+  def neutural: Iterable[Int] => Iterable[Int] = a => a
 
-  def odd: Iterable[Int] => Iterable[Int] = for (i <- _ if i % 2 == 1) yield i //Лучше использовать фильтр в данном случае.
+  def odd: Iterable[Int] => Iterable[Int] = _.filter(_ % 2 == 1)
 
   def even: Iterable[Int] => Iterable[Int] = for (i <- _ if i % 2 == 0) yield i //Ну, честно, это неэлегантно
 
@@ -299,7 +300,7 @@ object Application extends App {
 
   def pwr2: Iterable[Int] => Iterable[Int] = _.map(i => math.pow(2, i).toInt)
 
-  println(s"answers:\n${LetMeIIIIN(Array(neutural, odd, even, factor, sqr, pwr2))(10).mkString("\n")}")
+  println(s"answers:\n${LetMeIIIIN(List(neutural, odd, even, factor, sqr, pwr2))(10)}")
 
   /**
    * Это комент, чтобы объяснить строчку ниже
@@ -313,7 +314,7 @@ object Application extends App {
    */
   //def uniqueEven: Iterable[Int]=>Iterable[Int] = _.groupBy(a=>a).map(_._1).filter(_%2==1)
 
-  def uniqueEven: List[Int] => List[Int] = new HashSet[Int].concat(_).toList.filter(_ % 2 == 1)
+  def uniqueEven: List[Int] => List[Int] = _.filter(_ % 2 == 0).distinct
 
   def sortTwice: List[Int] => (List[Int], List[Int]) = a => (a.sortWith(_ > _), a.sortWith(_ < _))
 
@@ -324,7 +325,7 @@ object Application extends App {
 
   def substitute: Char => Char => String => String = C => H => str => for (ch <- str) yield ch match {
     case C => H
-    case c: Char => c
+    case ch:Char => ch
   }
 
   val str = "Wello hold"
@@ -354,4 +355,46 @@ object Application extends App {
   val f6 =
     f1:=>f2:=>f3:=>f5:=>f4:=>println
   f6(9875)
+
+  def threeV2(funcs:Seq[PartialFunction[Int,Int]])(n:Int): Seq[Seq[Int]] =
+    funcs.map(func =>(1 to n).collect(func))
+
+  type PFInt2Int = PartialFunction[Int,Int]
+
+  def neutral2:PFInt2Int = {
+    case i:Int => i
+  }
+  def odd2:PFInt2Int = {
+    case i:Int if i % 2 == 1 => i
+  }
+  def even2:PFInt2Int = {
+    case i:Int if i % 2 == 0 => i
+  }
+  def factor2:PFInt2Int = {
+    case i:Int => (1 to i).product
+  }
+  def sqr2:PFInt2Int = {
+    case i:Int => i*i
+  }
+  def twoPwr2:PFInt2Int = {
+    case i:Int => math.pow(2,i).toInt
+  }
+  val funcSeq = Seq(neutral2,odd2,even2,factor2,sqr2,twoPwr2)
+  val threeV3 = threeV2(_)(11)
+  println(threeV3(funcSeq).map(c=> c.mkString(",")).mkString("\n"))
 }
+
+// 3. Определите функцию, принимающую на вход целое n и возвращающую список, содержащий n элементов, упорядоченных по возрастанию.
+//    - список натуральных чисел,
+//    - список нечётных натуральных чисел,
+//    - список чётных натуральных чисел,
+//    - список квадратов натуральных чисел,
+//    - список факториалов,
+//    - список степеней 2^i.
+
+// 4. Определите следующие функции:
+//   4.1 Функция removeOdd, которая удаляет из заданного списка целых чисел все нечётные числа.
+//       Например removeOdd [1,4,5,6,10,6] должен возвращать [4,10], убрать дубликаты + вернуть 2 списка,
+//       отсортированных в прямом и обратном  порядке.
+//   4.2 Функция substitute :: Char -> Char -> String -> String, которая заменяет в строке указанный символ на заданный.
+//       Пример: substitute ‘e’ ‘i’ “eigenvalue” возвращает “iiginvalui”.
